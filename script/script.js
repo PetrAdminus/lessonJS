@@ -22,6 +22,6 @@ console.log("Цель заработать " + mission + " рублей");
 console.log(addExpenses.toLowerCase());
 console.log(addExpenses.split(', '));
 
-// Объявляем новую переменную
+// Объявляем новую переменную 
 let budgetDay = money / 30;
 console.log(budgetDay);
