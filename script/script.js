@@ -1,27 +1,71 @@
-//  Объявляем переменные
-let money = 100000,
+'use sctrict'
+
+let money = +prompt("Ваш месячный доход?", 50000),
   income = "Верстка",
-  addExpenses = "Интернет, Такси, Коммуналка",
-  deposit = true,
+  addExpenses = prompt("Перечислите возможные расходы за рассчитываемый период через запятую", "покупки, то, се"),
+  deposit = confirm("Есть ли у вас депозит в банке?"),
   mission = 1000000,
   period = 12;
 
-// Выводим в консоль тип данных зачений переменных
-console.log(typeof money);
-console.log(typeof income);
-console.log(typeof deposit);
+// вызовы функции showTypeOf
+let showTypeOf = function (data) {
+  console.log(data, typeof (data));
+};
 
-// Выводим в консоль длину строки
-console.log(addExpenses.length);
+showTypeOf(money);
+showTypeOf(income);
+showTypeOf(deposit);
 
-// Выводим сообщение c переменной 
-console.log("Период равен " + period + " месяцев");
-console.log("Цель заработать " + mission + " рублей");
-
-// Выводим строку в нижнем регистре + массив
-console.log(addExpenses.toLowerCase());
+// Вывод возможных расходов в виде массива (addExpenses)
 console.log(addExpenses.split(', '));
 
-// Объявляем новую переменную
-let budgetDay = money / 30;
-console.log(budgetDay);
+// Расходы за месяц вызов getExpensesMonth
+let expenses1 = prompt("Введите обязательную статью расходов:", "еда"),
+  amount1 = +prompt("Во сколько это обойдется?", 10000),
+  expenses2 = prompt("Введите обязательную статью расходов:", "бензин"),
+  amount2 = +prompt("Во сколько это обойдется?", 5000);
+
+function getExpensesMonth() {
+  return amount1 + amount2;
+};
+
+console.log(getExpensesMonth());
+
+
+function getAccumulatedMonth() {
+  return money - (amount1 + amount2);
+};
+
+let accumulatedMonth = getAccumulatedMonth()
+console.log("Бюджет на месяц " + accumulatedMonth);
+
+// Cрок достижения цели в месяцах
+function getTargetMonth() {
+  return Math.ceil(mission / accumulatedMonth);
+};
+
+console.log(getTargetMonth());
+
+// Бюджет на день
+let budgetDay = accumulatedMonth / 30;
+console.log("Бюджет на день " + budgetDay);
+
+// вызов функции getStatusIncome
+let getStatusIncome = function () {
+  switch (true) {
+    case budgetDay >= 1200:
+      return ("У вас высокий уровень дохода");
+      break;
+    case budgetDay < 1200 && budgetDay >= 600:
+      return ("У вас средний уровень дохода");
+      break;
+    case budgetDay < 600 && budgetDay > 0:
+      return ("К сожалению у вас уровень дохода ниже среднего");
+      break;
+    case budgetDay < 0:
+      return ("Что то пошло не так");
+      break;
+  }
+};
+
+console.log(getStatusIncome());
