@@ -29,7 +29,7 @@ let appData = {
 		let addExpenses = prompt('Перечислите возможные расходы:');
 		appData.addExpenses = addExpenses.toLowerCase().split(', ');
 		appData.deposit = confirm('Есть ли у вас депозит в банке?');
-		let sum = 0, question;
+		let question;
 		for (let i = 0; i < 2; i++) {
 			const expensesItem = prompt("Введите обязательную статью расходов:");
 			do {
