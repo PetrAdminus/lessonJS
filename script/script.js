@@ -1,99 +1,98 @@
-'use sctrict'
+'use strict'
 
 let isNumber = function (n) {
 	return !isNaN(parseFloat(n)) && isFinite(n)
 };
 
 let money,
-	income = "Верстка",
-	addExpenses = prompt("Перечислите возможные расходы за рассчитываемый период через запятую", "покупки, то, се"),
-	deposit = confirm("Есть ли у вас депозит в банке?"),
-	mission = 1000000,
-	period = 12;
-
-let start = function () {
-
-	do {
-		money = prompt("Ваш месячный доход?");
-	}
-	while (!isNumber(money));
-};
-start()
-
-// вызовы функции showTypeOf
-let showTypeOf = function (data) {
-	console.log(data, typeof (data));
-};
-showTypeOf(money);
-showTypeOf(income);
-showTypeOf(deposit);
-
-// Вывод возможных расходов в виде массива (addExpenses)
-console.log(addExpenses.split(', '));
-
-let expenses = [];
-
-let getExpensesMonth = function () {
-	let sum = 0;
-
-	for (let i = 0; i < 2; i++) {
-
-		expenses[i] = prompt("Введите обязательную статью расходов:");
-
+	start = function () {
 		do {
-			sum = prompt("Во сколько это обойдется?");
+			money = prompt("Ваш месячный доход?");
 		}
-		while (!isNumber(sum));
+		while (!isNumber(money));
+	};
+start();
+
+let appData = {
+	income: {},
+	addIncome: [],
+	expenses: {},
+	addExpenses: [],
+	deposit: false,
+	mission: 50000,
+	period: 3,
+	budget: money,
+	budgetDay: 0,
+	budgetMonth: 0,
+	expensesMonth: 0,
+	asking: function () {
+		let addExpenses = prompt('Перечислите возможные расходы:');
+		appData.addExpenses = addExpenses.toLowerCase().split(', ');
+		appData.deposit = confirm('Есть ли у вас депозит в банке?');
+		let sum = 0, question;
+		for (let i = 0; i < 2; i++) {
+			const expensesItem = prompt("Введите обязательную статью расходов:");
+			do {
+				question = +prompt("Во сколько это обойдется?");
+			}
+			while (!isNumber(question));
+			appData.expenses[expensesItem] = question;
+		};
+	},
+	getExpensesMonth: function () {
+		for (let key in appData.expenses) {
+			appData.expensesMonth += appData.expenses[key];
+		};
+	},
+	getBudget: function () {
+		appData.budgetMonth = appData.budget - appData.expensesMonth;
+		appData.budgetDay = appData.budgetMonth / 30;
+	},
+	getTargetMonth: function () {
+
+		let res = Math.ceil(appData.mission / appData.budgetMonth);
+
+		switch (true) {
+			case res > 0:
+				return ("Цель будет достигнута через: " + res + " месяцев")
+				break;
+			case res < 0:
+				return ("Цель не будет достигнута")
+				break;
+		}
+	},
+	getStatusIncome: function () {
+		switch (true) {
+			case appData.budgetDay >= 1200:
+				return ("У вас высокий уровень дохода");
+				break;
+			case appData.budgetDay < 1200 && appData.budgetDay >= 600:
+				return ("У вас средний уровень дохода");
+				break;
+			case appData.budgetDay < 600 && appData.budgetDay > 0:
+				return ("К сожалению у вас уровень дохода ниже среднего");
+				break;
+			case appData.budgetDay < 0:
+				return ("Что то пошло не так");
+				break;
+		}
+	},
+	cycle: function () {
+		for (let key in appData) {
+			console.log("Наша программа включает в себя данные: " + key + " " + appData[key]);
+		};
 	}
-	return sum;
 };
+appData.asking();
+appData.getExpensesMonth();
+console.log("Расходы за месяц " + appData.expensesMonth);
 
-let expensesAmount = getExpensesMonth();
-
-console.log(expensesAmount);
-
-function getAccumulatedMonth() {
-	return money - expensesAmount;
-};
-
-let accumulatedMonth = getAccumulatedMonth()
-console.log("Бюджет на месяц " + accumulatedMonth);
+appData.getBudget();
 
 // Cрок достижения цели в месяцах
-let getTargetMonth = function () {
-
-	let res = Math.ceil(mission / accumulatedMonth);
-
-	switch (true) {
-		case res > 0:
-			return ("Цель будет достигнута через:" + res + "месяцев")
-			break;
-		case res < 0:
-			return ("Цель не будет достигнута")
-			break;
-	}
-};
-console.log(getTargetMonth());
-
-// Бюджет на день
-let budgetDay = accumulatedMonth / 30;
-console.log("Бюджет на день " + budgetDay);
+console.log(appData.getTargetMonth());
 
 // вызов функции getStatusIncome
-let getStatusIncome = function () {
-	switch (true) {
-		case budgetDay >= 1200:
-			return ("У вас высокий уровень дохода");
-			break;
-		case budgetDay < 1200 && budgetDay >= 600:
-			return ("У вас средний уровень дохода");
-			break;
-		case budgetDay < 600 && budgetDay > 0:
-			return ("К сожалению у вас уровень дохода ниже среднего");
-			break;
-		case budgetDay < 0:
-			return ("Что то пошло не так");
-			break;
-	}
-};
-console.log(getStatusIncome());
+console.log(appData.getStatusIncome());
+
+appData.cycle();
